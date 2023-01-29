@@ -67,8 +67,9 @@ reva-firmware.list \
 
 #Flash
 flash:
+	make -j all
 	$(CP) -O binary reva-firmware.elf reva-firmware.bin
-	st-flash write main.bin 0x8000000
+	st-flash --reset write reva-firmware.bin 0x8000000
 
 
 # All Target
@@ -79,7 +80,7 @@ main-build: reva-firmware.elf secondary-outputs
 
 # Tool invocations
 reva-firmware.elf reva-firmware.map: $(OBJS) $(USER_OBJS) $(FLASHLD_PATH) makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "reva-firmware.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"$(FLASHLD_PATH)" --specs=nosys.specs -Wl,-Map="reva-firmware.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+	arm-none-eabi-gcc -o "reva-firmware.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"$(FLASHLD_PATH)" --specs=nosys.specs -Wl,-Map="reva-firmware.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group -g3
 	@echo 'Finished building target: $@'
 	@echo ' '
 
