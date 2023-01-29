@@ -77,7 +77,7 @@ void HAL_MspInit(void)
   HAL_NVIC_EnableIRQ(PVD_IRQn);
 
   /* USER CODE BEGIN MspInit 1 */
-
+  __HAL_AFIO_REMAP_SWJ_NOJTAG();
   /* USER CODE END MspInit 1 */
 }
 
