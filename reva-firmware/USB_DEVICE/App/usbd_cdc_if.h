@@ -29,6 +29,7 @@ extern "C"
 
 /* Includes ------------------------------------------------------------------*/
 #include "usbd_cdc.h"
+#include "stdbool.h"
 
 /* USER CODE BEGIN INCLUDE */
 
@@ -51,6 +52,8 @@ extern "C"
 /* Define size for the receive and transmit buffer over CDC */
 #define APP_RX_DATA_SIZE 1024
 #define APP_TX_DATA_SIZE 1024
+
+#define LOCAL_BUFFER_SIZE 128
   /* USER CODE BEGIN EXPORTED_DEFINES */
 
   /* USER CODE END EXPORTED_DEFINES */
@@ -65,7 +68,11 @@ extern "C"
    */
 
   /* USER CODE BEGIN EXPORTED_TYPES */
-
+  typedef enum
+  {
+    USB_CDC_RX_BUFFER_OK = 0U,
+    USB_CDC_RX_BUFFER_NO_DATA
+  } USB_CDC_RX_BUFFER_StatusTypeDef;
   /* USER CODE END EXPORTED_TYPES */
 
   /**
@@ -109,6 +116,11 @@ extern "C"
   uint8_t CDC_Transmit_FS(uint8_t *Buf, uint16_t Len);
 
   /* USER CODE BEGIN EXPORTED_FUNCTIONS */
+  uint8_t CDC_Read_RX_FS(uint8_t *Buf, uint16_t Len);
+  uint16_t CDC_RX_Buffer_len();
+  uint8_t CDC_RX_queue(uint8_t *buf, uint16_t Len);
+  void CDC_Flush_RX_buffer();
+  void local_buffer_flush(uint8_t *buf, size_t buff_size);
 
   /* USER CODE END EXPORTED_FUNCTIONS */
 
