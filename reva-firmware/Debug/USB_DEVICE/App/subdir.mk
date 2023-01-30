@@ -7,17 +7,20 @@
 C_SRCS += \
 ../USB_DEVICE/App/usb_device.c \
 ../USB_DEVICE/App/usbd_cdc_if.c \
-../USB_DEVICE/App/usbd_desc.c 
+../USB_DEVICE/App/usbd_desc.c \
+../USB_DEVICE/App/usbd_cdc_if_ctrl.c 
 
 OBJS += \
 ./USB_DEVICE/App/usb_device.o \
 ./USB_DEVICE/App/usbd_cdc_if.o \
-./USB_DEVICE/App/usbd_desc.o 
+./USB_DEVICE/App/usbd_desc.o \
+./USB_DEVICE/App/usbd_cdc_if_ctrl.o
 
 C_DEPS += \
 ./USB_DEVICE/App/usb_device.d \
 ./USB_DEVICE/App/usbd_cdc_if.d \
-./USB_DEVICE/App/usbd_desc.d 
+./USB_DEVICE/App/usbd_desc.d \
+./USB_DEVICE/App/usbd_cdc_if_ctrl.d
 
 
 # Each subdirectory must supply rules for building sources it contributes
@@ -27,7 +30,7 @@ USB_DEVICE/App/%.o USB_DEVICE/App/%.su: ../USB_DEVICE/App/%.c USB_DEVICE/App/sub
 clean: clean-USB_DEVICE-2f-App
 
 clean-USB_DEVICE-2f-App:
-	-$(RM) ./USB_DEVICE/App/usb_device.d ./USB_DEVICE/App/usb_device.o ./USB_DEVICE/App/usb_device.su ./USB_DEVICE/App/usbd_cdc_if.d ./USB_DEVICE/App/usbd_cdc_if.o ./USB_DEVICE/App/usbd_cdc_if.su ./USB_DEVICE/App/usbd_desc.d ./USB_DEVICE/App/usbd_desc.o ./USB_DEVICE/App/usbd_desc.su
+	-$(RM) ./USB_DEVICE/App/usbd_cdc_if_ctrl.d ./USB_DEVICE/App/usbd_cdc_if_ctrl.o ./USB_DEVICE/App/usbd_cdc_if_ctrl.su ./USB_DEVICE/App/usb_device.d ./USB_DEVICE/App/usb_device.o ./USB_DEVICE/App/usb_device.su ./USB_DEVICE/App/usbd_cdc_if.d ./USB_DEVICE/App/usbd_cdc_if.o ./USB_DEVICE/App/usbd_cdc_if.su ./USB_DEVICE/App/usbd_desc.d ./USB_DEVICE/App/usbd_desc.o ./USB_DEVICE/App/usbd_desc.su
 
 .PHONY: clean-USB_DEVICE-2f-App
 

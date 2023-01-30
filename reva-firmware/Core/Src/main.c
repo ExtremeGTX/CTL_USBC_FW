@@ -37,11 +37,11 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+uint8_t rxData[LOCAL_BUFFER_SIZE];
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -89,7 +89,6 @@ int main(void)
   MX_GPIO_Init();
   MX_USB_DEVICE_Init();
   /* USER CODE BEGIN 2 */
-  uint8_t rxData[LOCAL_BUFFER_SIZE];
   memset(rxData, 0, LOCAL_BUFFER_SIZE);
   /* USER CODE END 2 */
 
@@ -102,7 +101,6 @@ int main(void)
     if (bytesAvailable > 0)
 
     {
-      uint16_t bytesToRead = bytesAvailable >= LOCAL_BUFFER_SIZE ? LOCAL_BUFFER_SIZE : bytesAvailable;
       if (CDC_Read_RX_FS(rxData, LOCAL_BUFFER_SIZE) == USB_CDC_RX_BUFFER_OK)
       {
         process_input(rxData);
