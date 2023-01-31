@@ -69,15 +69,3 @@ uint16_t CDC_RX_Buffer_len();
  * @brief Flush  CDC external buffer
  */
 void CDC_Flush_RX_buffer();
-
-/**
- * @brief Clean external buffer
- *
- * @param uint8_t *buf: Pointer to the buffer
- * @param uint8_t buff_size: Size of buffer
- */
-void local_buffer_flush(uint8_t *buf, size_t buff_size);
-
-end_of_line_e find_eol_type(uint8_t *buf, uint8_t buf_len);
-
-uint8_t CDC_RX_queue(uint8_t *buf, uint16_t Len);

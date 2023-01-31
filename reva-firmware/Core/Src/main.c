@@ -37,7 +37,6 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-uint8_t rxData[LOCAL_BUFFER_SIZE];
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -89,15 +88,17 @@ int main(void)
   MX_GPIO_Init();
   MX_USB_DEVICE_Init();
   /* USER CODE BEGIN 2 */
-  memset(rxData, 0, LOCAL_BUFFER_SIZE);
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+
+  // Disable all ports
   port_switch_control(PORTS_DISABLED, PORTS_OFF);
   while (1)
   {
-      CDC_Read_RX_FS();
+    CDC_Read_RX_FS();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

@@ -7,13 +7,18 @@ static volatile uint16_t rxBufferTailPos = 0;       // Receive buffer read posit
 
 static bool CDC_RX_Get_Next_Char(char *ch)
 {
+    // If buffer is empty
     if (rxBufferHeadPos == rxBufferTailPos)
         return false;
 
+    // Set passed in char to new value in Rx buffer
     *ch = rxBuffer[rxBufferTailPos];
 
+    // Increment tail position
     rxBufferTailPos++;
 
+    // Make sure the tail position does not go beyond
+    // the RX buffer size
     rxBufferTailPos %= APP_RX_DATA_SIZE;
 
     return true;
@@ -21,6 +26,7 @@ static bool CDC_RX_Get_Next_Char(char *ch)
 
 static bool is_eol_char(char ch)
 {
+    // Return if CR or LF detected
     return (ch == '\n') || (ch == '\r');
 }
 
@@ -56,33 +62,40 @@ uint8_t CDC_fill_receive_buffer(USBD_HandleTypeDef *hUsbDeviceFS, uint8_t *incom
 void CDC_Read_RX_FS(void)
 {
     char c;
+    static char buf[LOCAL_BUFFER_SIZE];
+    static size_t buf_index = 0;
+
+    // Get next character from the Rx buffer
     bool has_next_char = CDC_RX_Get_Next_Char(&c);
 
+    // If no new char exit
     if (!has_next_char)
         return;
 
-    static char buf[128];
-    static size_t buf_index = 0;
+    // IF CR or LF seen
+    if (is_eol_char(c))
+    {
 
-    if (is_eol_char(c)) {
-        buf[buf_index] = '\0';
+        // Clear the EOL
+        // buf[buf_index] = '\0';
 
-        if (strlen(buf)){
-
-            // MASSIVE HACK - take out of process_input.
-            buf[buf_index] = '\n';
-            buf[buf_index + 1] = '\0';
-
+        // If EOL; anything except '\r' '\n'?
+        // buf index is only incremented if anything except LF or CR is seen
+        if (buf_index > 0)
+        {
             process_input(buf);
         }
 
         buf_index = 0;
-    } else {
-        buf[buf_index] = c;
+    }
+    else
+    {
 
+        buf[buf_index] = c;
         buf_index++;
 
-        if (buf_index > sizeof(buf)) {
+        if (buf_index > (sizeof(buf) / sizeof(buf[0])))
+        {
             printf("BUFFER OVERFLOW, COMMANDS DROPPED\r\n");
 
             buf_index = 0;
