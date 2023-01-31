@@ -7,18 +7,14 @@ uint8_t selected_port = AT_PORTS_DISABLED;
 
 at_cmds_e parse_input(char *rx_data)
 {
-    if (strncmp(rx_data, "\r", 1) == 0 || strncmp(rx_data, "\n", 1) == 0)
-    {
-        return AT_ENTER;
-    }
 
-    if (strncmp(rx_data, "AT", 2))
+    if (strncmp(rx_data, "AT", 2)) // If first 2 char != 'AT'
     {
         return AT_UNKNOWN_CMD;
     }
     else
     {
-        if (strlen(rx_data) == 3 && (rx_data[2] == '\n' || rx_data[2] == '\r'))
+        if ((rx_data[2] == '\n' || rx_data[2] == '\r'))
         {
             return AT_TEST;
         }
@@ -175,10 +171,6 @@ void process_input(uint8_t *input)
         port_switch_control(PORTS_DISABLED, PORTS_OFF);
         local_buffer_flush(input, LOCAL_BUFFER_SIZE);
         break;
-
-    case AT_ENTER:
-        printf("\r\n");
-        local_buffer_flush(input, LOCAL_BUFFER_SIZE);
 
     default:
         local_buffer_flush(input, LOCAL_BUFFER_SIZE);

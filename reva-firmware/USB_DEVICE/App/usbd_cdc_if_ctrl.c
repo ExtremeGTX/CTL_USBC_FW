@@ -54,13 +54,23 @@ uint8_t CDC_Read_RX_FS(uint8_t *Buf, uint16_t Len)
             printf("BUFFER OVERFLOW, FEW COMMANDS DROPPED\r\n");
             local_buffer_flush(Buf, LOCAL_BUFFER_SIZE);
         }
+
         Buf[buf_consumed] = rxBuffer[rxBufferTailPos];
-        if (Buf[buf_consumed] == '\n' || Buf[buf_consumed] == '\r')
+        uint8_t eol_type = find_eol_type(Buf, buf_consumed);
+        if (eol_type != N_EOL)
         {
-            new_line = true;
-            buf_consumed = (buf_consumed + 1) % LOCAL_BUFFER_SIZE;
+
             rxBufferTailPos = (uint16_t)((uint16_t)(rxBufferTailPos + 1) % APP_RX_DATA_SIZE);
-            break;
+            if (eol_type == SKIP_LF_LR)
+            {
+                continue;
+            }
+            else
+            {
+                buf_consumed = (buf_consumed + 1) % LOCAL_BUFFER_SIZE;
+                new_line = true;
+                break;
+            }
         }
         buf_consumed = (buf_consumed + 1) % LOCAL_BUFFER_SIZE;
         rxBufferTailPos = (uint16_t)((uint16_t)(rxBufferTailPos + 1) % APP_RX_DATA_SIZE);
@@ -73,6 +83,30 @@ uint8_t CDC_Read_RX_FS(uint8_t *Buf, uint16_t Len)
     else
     {
         return USB_CDC_RX_BUFFER_NO_DATA;
+    }
+}
+
+end_of_line_e find_eol_type(uint8_t *buf, uint8_t buf_len)
+{
+    // printf("out val %s %d \r\n", (char *)buf, buf_len);
+    if (buf_len == 0 && (buf[buf_len] == '\n' || buf[buf_len] == '\r'))
+    {
+        return SKIP_LF_LR;
+    }
+    if (buf[buf_len] == '\n')
+    {
+
+        return LF;
+    }
+
+    else if (buf[buf_len] == '\r')
+    {
+        return CR;
+    }
+
+    else
+    {
+        return N_EOL;
     }
 }
 

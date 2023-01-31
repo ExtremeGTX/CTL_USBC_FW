@@ -13,6 +13,14 @@ typedef enum
     USB_CDC_RX_BUFFER_NO_DATA
 } USB_CDC_RX_BUFFER_StatusTypeDef;
 
+typedef enum
+{
+    N_EOL = 0u,
+    SKIP_LF_LR,
+    LF, // Line feed
+    CR, // Carriage return
+} end_of_line_e;
+
 /**
  * @brief Register Tx and Rx buffer
  * @Note Call once when initializing CDC
@@ -69,5 +77,7 @@ void CDC_Flush_RX_buffer();
  * @param uint8_t buff_size: Size of buffer
  */
 void local_buffer_flush(uint8_t *buf, size_t buff_size);
+
+end_of_line_e find_eol_type(uint8_t *buf, uint8_t buf_len);
 
 uint8_t CDC_RX_queue(uint8_t *buf, uint16_t Len);
