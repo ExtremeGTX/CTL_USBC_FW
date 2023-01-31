@@ -8,17 +8,16 @@ break BusFault_Handler
 break UsageFault_Handler
 
 # See documentation below.
-define load-reset-halt
+define load-reset-continue
   load
 
-  # Halt-then-reset because just "monitor reset" lets the target keep
+  # Halt then continue because just "monitor reset" lets the target keep
   # running in the background, while gdb keeps its prompt up and so
   # expects it to be halted.
   monitor reset halt
-  continue
 end
 
-document load-reset-halt
+document load-reset-continue
 Custom function to load the binary, reset the target, and set it
 running.
 

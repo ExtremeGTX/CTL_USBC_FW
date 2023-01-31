@@ -75,9 +75,9 @@ at_cmds_e parse_input(char *rx_data)
     return AT_UNKNOWN_CMD;
 }
 
-void process_input(uint8_t *input)
+void process_input(char *input)
 {
-    switch (parse_input((char *)input))
+    switch (parse_input(input))
     {
     case AT_TEST:
         printf("\rOK\r\n");

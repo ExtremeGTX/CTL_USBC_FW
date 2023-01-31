@@ -42,6 +42,6 @@ at_cmds_e parse_input(char *rx_data);
  * @brief Process received data and respond to recognized 
  * AT commands.  
 */
-void process_input(uint8_t *input);
+void process_input(char *input);
 
 #endif

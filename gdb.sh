@@ -4,6 +4,6 @@
 TOP_DIR="$(dirname ${0})"
 
 ELF="${TOP_DIR}/reva-firmware/Debug/reva-firmware.elf"
-GDB_INIT="${TOP_DIR}/.gdbinit"
+GDB_INIT="${TOP_DIR}/gdbinit"
 
 gdb-multiarch "${ELF}" -x "${GDB_INIT}" "${@}"

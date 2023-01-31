@@ -58,7 +58,7 @@ uint8_t CDC_transmit_logic(USBD_HandleTypeDef *hUsbDeviceFS, uint8_t *Buf, uint1
  * @param uint8_t *Buf: External buffer to fill data from CDC receive buffer
  * @param uint8_t Len: Len of of the external buffer
  */
-uint8_t CDC_Read_RX_FS(uint8_t *Buf, uint16_t Len);
+void CDC_Read_RX_FS(void);
 
 /**
  * @brief Get len of new data to read from the receive buffer

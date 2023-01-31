@@ -97,15 +97,7 @@ int main(void)
   port_switch_control(PORTS_DISABLED, PORTS_OFF);
   while (1)
   {
-    uint16_t bytesAvailable = CDC_RX_Buffer_len();
-    if (bytesAvailable > 0)
-
-    {
-      if (CDC_Read_RX_FS(rxData, LOCAL_BUFFER_SIZE) == USB_CDC_RX_BUFFER_OK)
-      {
-        process_input(rxData);
-      }
-    }
+      CDC_Read_RX_FS();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

@@ -1,8 +1,28 @@
 #include "usbd_cdc_if_ctrl.h"
+#include "at_cmds.h"
 
-volatile uint8_t rxBuffer[APP_RX_DATA_SIZE]; // Receive buffer
-volatile uint16_t rxBufferHeadPos = 0;       // Receive buffer write position
-volatile uint16_t rxBufferTailPos = 0;       // Receive buffer read position
+static volatile uint8_t rxBuffer[APP_RX_DATA_SIZE]; // Receive buffer
+static volatile uint16_t rxBufferHeadPos = 0;       // Receive buffer write position
+static volatile uint16_t rxBufferTailPos = 0;       // Receive buffer read position
+
+static bool CDC_RX_Get_Next_Char(char *ch)
+{
+    if (rxBufferHeadPos == rxBufferTailPos)
+        return false;
+
+    *ch = rxBuffer[rxBufferTailPos];
+
+    rxBufferTailPos++;
+
+    rxBufferTailPos %= APP_RX_DATA_SIZE;
+
+    return true;
+}
+
+static bool is_eol_char(char ch)
+{
+    return (ch == '\n') || (ch == '\r');
+}
 
 void register_buffers(USBD_HandleTypeDef *hUsbDeviceFS, uint8_t *Tx_buf, uint8_t *Rx_buf)
 {
@@ -33,57 +53,45 @@ uint8_t CDC_fill_receive_buffer(USBD_HandleTypeDef *hUsbDeviceFS, uint8_t *incom
     return (USBD_OK);
 }
 
-uint8_t CDC_Read_RX_FS(uint8_t *Buf, uint16_t Len)
+void CDC_Read_RX_FS(void)
 {
-    uint16_t bytesAvailable = CDC_RX_Buffer_len();
-    bool new_line = false;
+    char c;
+    bool has_next_char = CDC_RX_Get_Next_Char(&c);
 
-    static size_t buf_consumed = 0;
-    if (buf_consumed >= LOCAL_BUFFER_SIZE)
-    {
-        printf("BUFFER OVERFLOW, FEW COMMANDS DROPPED\r\n");
-        local_buffer_flush(Buf, LOCAL_BUFFER_SIZE);
-        buf_consumed = 0;
-    }
+    if (!has_next_char)
+        return;
 
-    for (uint16_t i = 0; i < bytesAvailable; i++)
-    {
+    static char buf[128];
+    static size_t buf_index = 0;
 
-        if ((buf_consumed + 1) >= LOCAL_BUFFER_SIZE)
-        {
-            printf("BUFFER OVERFLOW, FEW COMMANDS DROPPED\r\n");
-            local_buffer_flush(Buf, LOCAL_BUFFER_SIZE);
+    if (is_eol_char(c)) {
+        buf[buf_index] = '\0';
+
+        if (strlen(buf)){
+
+            // MASSIVE HACK - take out of process_input.
+            buf[buf_index] = '\n';
+            buf[buf_index + 1] = '\0';
+
+            process_input(buf);
         }
 
-        Buf[buf_consumed] = rxBuffer[rxBufferTailPos];
-        uint8_t eol_type = find_eol_type(Buf, buf_consumed);
-        if (eol_type != N_EOL)
-        {
+        buf_index = 0;
+    } else {
+        buf[buf_index] = c;
 
-            rxBufferTailPos = (uint16_t)((uint16_t)(rxBufferTailPos + 1) % APP_RX_DATA_SIZE);
-            if (eol_type == SKIP_LF_LR)
-            {
-                continue;
-            }
-            else
-            {
-                buf_consumed = (buf_consumed + 1) % LOCAL_BUFFER_SIZE;
-                new_line = true;
-                break;
-            }
+        buf_index++;
+
+        if (buf_index > sizeof(buf)) {
+            printf("BUFFER OVERFLOW, COMMANDS DROPPED\r\n");
+
+            buf_index = 0;
+
+            return;
         }
-        buf_consumed = (buf_consumed + 1) % LOCAL_BUFFER_SIZE;
-        rxBufferTailPos = (uint16_t)((uint16_t)(rxBufferTailPos + 1) % APP_RX_DATA_SIZE);
     }
-    if (new_line)
-    {
-        buf_consumed = 0;
-        return USB_CDC_RX_BUFFER_OK;
-    }
-    else
-    {
-        return USB_CDC_RX_BUFFER_NO_DATA;
-    }
+
+    return;
 }
 
 end_of_line_e find_eol_type(uint8_t *buf, uint8_t buf_len)
@@ -122,11 +130,6 @@ uint8_t CDC_transmit_logic(USBD_HandleTypeDef *hUsbDeviceFS, uint8_t *Buf, uint1
     USBD_CDC_SetTxBuffer(hUsbDeviceFS, Buf, Len);
     result = USBD_CDC_TransmitPacket(hUsbDeviceFS);
     return result;
-}
-
-uint16_t CDC_RX_Buffer_len()
-{
-    return (uint16_t)(rxBufferHeadPos - rxBufferTailPos) % APP_RX_DATA_SIZE;
 }
 
 void CDC_Flush_RX_buffer()
