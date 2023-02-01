@@ -79,7 +79,6 @@ void CDC_Read_RX_FS(void)
         {
             process_input(buf);
         }
-
         buf_index = 0;
     }
     else

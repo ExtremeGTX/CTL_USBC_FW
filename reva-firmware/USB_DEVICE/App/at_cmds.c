@@ -1,12 +1,20 @@
 #include "at_cmds.h"
 #include "main.h"
 
+// Delay between USB port switching
+#define DELAY_BW_SWITCH 500 // ms
+
 const char *FIRMWARE_VERSION = "1.0";
 const char *HARDWARE_VERSION = "Rev-B";
 uint8_t selected_port = AT_PORTS_DISABLED;
 
 at_cmds_e parse_input(const char *rx_data)
 {
+
+    if (!strcmp(rx_data, "AT"))
+    {
+        return AT_TEST;
+    }
 
     // Does the received string starts with AT?
     if (strncmp(rx_data, "AT", 2) != 0) // If first 2 char != 'AT'
@@ -75,7 +83,7 @@ at_cmds_e parse_input(const char *rx_data)
         // if input string starts with "AT" but it is not followed by anything
         else
         {
-            return AT_TEST;
+            return AT_UNKNOWN_CMD;
         }
     }
     // For any other unknown case
@@ -96,41 +104,41 @@ void process_input(const char *input)
         break;
 
     case AT_PORTS_DISABLED:
-        printf("\rOK\r\n");
         port_switch_control(PORTS_DISABLED, PORTS_OFF);
         selected_port = AT_PORTS_DISABLED;
+        printf("\rOK\r\n");
         break;
 
     case AT_PORT_A_SOURCE_B:
-        printf("\rOK\r\n");
         port_switch_control(PORTS_DISABLED, PORTS_OFF);
-        HAL_Delay(500);
+        HAL_Delay(DELAY_BW_SWITCH);
         port_switch_control(PORT_D_EN, PORT_SINK);
         selected_port = AT_PORT_A_SOURCE_B;
+        printf("\rOK\r\n");
         break;
 
     case AT_PORT_A_SOURCE_C:
-        printf("\rOK\r\n");
         port_switch_control(PORTS_DISABLED, PORTS_OFF);
-        HAL_Delay(500);
+        HAL_Delay(DELAY_BW_SWITCH);
         port_switch_control(PORT_C_EN, PORT_SINK);
         selected_port = AT_PORT_A_SOURCE_C;
+        printf("\rOK\r\n");
         break;
 
     case AT_PORT_B_SOURCE_A:
-        printf("\rOK\r\n");
         port_switch_control(PORTS_DISABLED, PORTS_OFF);
-        HAL_Delay(500);
+        HAL_Delay(DELAY_BW_SWITCH);
         port_switch_control(PORT_D_EN, PORT_SOURCE);
         selected_port = AT_PORT_B_SOURCE_A;
+        printf("\rOK\r\n");
         break;
 
     case AT_PORT_C_SOURCE_A:
-        printf("\rOK\r\n");
         port_switch_control(PORTS_DISABLED, PORTS_OFF);
-        HAL_Delay(500);
+        HAL_Delay(DELAY_BW_SWITCH);
         port_switch_control(PORT_C_EN, PORT_SOURCE);
         selected_port = AT_PORT_C_SOURCE_A;
+        printf("\rOK\r\n");
         break;
 
     case AT_PORT_SEL:
@@ -165,8 +173,8 @@ void process_input(const char *input)
         break;
 
     case AT_UNKNOWN_CMD:
-        printf("\rERROR: UNKNOWN COMMAND\r\n");
         port_switch_control(PORTS_DISABLED, PORTS_OFF);
+        printf("\rERROR: UNKNOWN COMMAND\r\n");
         break;
 
     default:

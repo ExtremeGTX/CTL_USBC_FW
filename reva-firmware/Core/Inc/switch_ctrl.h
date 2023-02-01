@@ -46,7 +46,8 @@ typedef struct source_sink
     GPIO_TypeDef *port_source_bank;
     uint16_t port_source_pin;
     GPIO_TypeDef *port_sink_bank;
-    uint16_t port_sink_pin;;
+    uint16_t port_sink_pin;
+    ;
 } source_sink_t;
 
 typedef enum
@@ -75,7 +76,6 @@ typedef enum
     MCU_SWITCH_POWER_C_SINK = GPIO_PIN_4,
     MCU_SWITCH_POWER_C_SOURCE = GPIO_PIN_5,
 } switch_pwr_ctrl_e;
-
 
 /**
  * @brief Control source and sink switch for downstream portS

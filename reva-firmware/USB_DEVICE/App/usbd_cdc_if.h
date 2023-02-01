@@ -52,9 +52,7 @@ extern "C"
 /* Define size for the receive and transmit buffer over CDC */
 #define APP_RX_DATA_SIZE 1024
 #define APP_TX_DATA_SIZE 1024
-#define LOCAL_BUFFER_SIZE 128
   /* USER CODE BEGIN EXPORTED_DEFINES */
-
   /* USER CODE END EXPORTED_DEFINES */
 
   /**

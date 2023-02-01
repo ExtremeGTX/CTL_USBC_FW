@@ -96,6 +96,7 @@ int main(void)
 
   // Disable all ports
   port_switch_control(PORTS_DISABLED, PORTS_OFF);
+  // Error_Handler();
   while (1)
   {
     CDC_Read_RX_FS();
@@ -178,6 +179,7 @@ void Error_Handler(void)
   /* USER CODE BEGIN Error_Handler_Debug */
   /* User can add his own implementation to report the HAL error return state */
   __disable_irq();
+  NVIC_SystemReset();
   /* TODO: can we printf() a message here? */
   while (1)
   {
@@ -198,7 +200,7 @@ void assert_failed(uint8_t *file, uint32_t line)
   /* USER CODE BEGIN 6 */
   /* User can add his own implementation to report the file name and line number,
      ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-    /* TODO: printf() here? */
+  /* TODO: printf() here? */
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */

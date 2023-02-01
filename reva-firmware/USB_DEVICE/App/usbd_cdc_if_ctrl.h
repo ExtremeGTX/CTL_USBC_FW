@@ -4,6 +4,9 @@
 #include "stdint.h"
 #include "stdio.h"
 
+// Size of local receive buffer
+#define LOCAL_BUFFER_SIZE 128
+
 /**
  * @brief Enum defining USB CDC buffer status
  */
