@@ -30,17 +30,11 @@ static bool is_eol_char(char ch)
     return (ch == '\n') || (ch == '\r');
 }
 
-void register_buffers(USBD_HandleTypeDef *hUsbDeviceFS, uint8_t *Tx_buf, uint8_t *Rx_buf)
-{
-    USBD_CDC_SetTxBuffer(hUsbDeviceFS, Tx_buf, 0);
-    USBD_CDC_SetRxBuffer(hUsbDeviceFS, Rx_buf);
-}
-
 uint8_t CDC_fill_receive_buffer(USBD_HandleTypeDef *hUsbDeviceFS, uint8_t *incoming_Buf, uint32_t *Len)
 {
 
-    uint32_t len = (uint32_t)*Len;          // Get length
-    uint16_t tempHeadPos = rxBufferHeadPos; // Increment temp head pos while writing, then update main variable when complete
+    uint32_t len = (uint32_t)*Len;
+    uint16_t tempHeadPos = rxBufferHeadPos;
 
     for (uint32_t i = 0; i < len; i++)
     {
@@ -77,7 +71,7 @@ void CDC_Read_RX_FS(void)
     {
 
         // Clear the EOL
-        // buf[buf_index] = '\0';
+        buf[buf_index] = '\0';
 
         // If EOL; anything except '\r' '\n'?
         // buf index is only incremented if anything except LF or CR is seen
@@ -107,30 +101,6 @@ void CDC_Read_RX_FS(void)
     return;
 }
 
-end_of_line_e find_eol_type(uint8_t *buf, uint8_t buf_len)
-{
-    // printf("out val %s %d \r\n", (char *)buf, buf_len);
-    if (buf_len == 0 && (buf[buf_len] == '\n' || buf[buf_len] == '\r'))
-    {
-        return SKIP_LF_LR;
-    }
-    if (buf[buf_len] == '\n')
-    {
-
-        return LF;
-    }
-
-    else if (buf[buf_len] == '\r')
-    {
-        return CR;
-    }
-
-    else
-    {
-        return N_EOL;
-    }
-}
-
 uint8_t CDC_transmit_logic(USBD_HandleTypeDef *hUsbDeviceFS, uint8_t *Buf, uint16_t Len)
 {
 
@@ -147,16 +117,11 @@ uint8_t CDC_transmit_logic(USBD_HandleTypeDef *hUsbDeviceFS, uint8_t *Buf, uint1
 
 void CDC_Flush_RX_buffer()
 {
-    for (int i = 0; i < APP_RX_DATA_SIZE; i++)
+    for (int i = 0; i < (sizeof(rxBuffer) / sizeof(rxBuffer[0])); i++)
     {
         rxBuffer[i] = 0;
     }
 
     rxBufferHeadPos = 0;
     rxBufferTailPos = 0;
-}
-
-void local_buffer_flush(uint8_t *buf, size_t buff_size)
-{
-    memset(buf, 0, buff_size);
 }

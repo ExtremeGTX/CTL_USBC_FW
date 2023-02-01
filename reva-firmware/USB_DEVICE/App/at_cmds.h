@@ -36,12 +36,12 @@ typedef enum
  * @param char *rx_data: receive buffer to pass
  * @return at_cmd_e: Recognized AT cmd  
 */
-at_cmds_e parse_input(char *rx_data);
+at_cmds_e parse_input(const char *rx_data);
 
 /**
  * @brief Process received data and respond to recognized 
  * AT commands.  
 */
-void process_input(char *input);
+void process_input(const char *input);
 
 #endif

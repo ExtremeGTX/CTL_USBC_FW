@@ -13,24 +13,6 @@ typedef enum
     USB_CDC_RX_BUFFER_NO_DATA
 } USB_CDC_RX_BUFFER_StatusTypeDef;
 
-typedef enum
-{
-    N_EOL = 0u,
-    SKIP_LF_LR,
-    LF, // Line feed
-    CR, // Carriage return
-} end_of_line_e;
-
-/**
- * @brief Register Tx and Rx buffer
- * @Note Call once when initializing CDC
- *
- * @param USBD_HandleTypeDef: USB device handle structure
- * @param uint8_t *Tx_buf: Pointer to transmit buffer to register
- * @param uint8_t *Rx_buf: Pointer to receive buffer to register
- */
-void register_buffers(USBD_HandleTypeDef *hUsbDeviceFS, uint8_t *Tx_buf, uint8_t *Rx_buf);
-
 /**
  * @brief Handle incoming data over serial and fill it in the receive data buffer.
  * @Note call inside CDC_Receive_fs(uint8_t *Buf, uint32_t *Len) function in usbd_cdc_if.c
@@ -59,11 +41,6 @@ uint8_t CDC_transmit_logic(USBD_HandleTypeDef *hUsbDeviceFS, uint8_t *Buf, uint1
  * @param uint8_t Len: Len of of the external buffer
  */
 void CDC_Read_RX_FS(void);
-
-/**
- * @brief Get len of new data to read from the receive buffer
- */
-uint16_t CDC_RX_Buffer_len();
 
 /**
  * @brief Flush  CDC external buffer

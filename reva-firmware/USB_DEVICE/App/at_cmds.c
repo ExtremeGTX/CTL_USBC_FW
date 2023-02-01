@@ -5,7 +5,7 @@ const char *FIRMWARE_VERSION = "1.0";
 const char *HARDWARE_VERSION = "Rev-B";
 uint8_t selected_port = AT_PORTS_DISABLED;
 
-at_cmds_e parse_input(char *rx_data)
+at_cmds_e parse_input(const char *rx_data)
 {
 
     // Does the received string starts with AT?
@@ -83,7 +83,7 @@ at_cmds_e parse_input(char *rx_data)
     return AT_UNKNOWN_CMD;
 }
 
-void process_input(char *input)
+void process_input(const char *input)
 {
     switch (parse_input(input))
     {
@@ -165,7 +165,7 @@ void process_input(char *input)
         break;
 
     case AT_UNKNOWN_CMD:
-        printf("\rERROR\r\n");
+        printf("\rERROR: UNKNOWN COMMAND\r\n");
         port_switch_control(PORTS_DISABLED, PORTS_OFF);
         break;
 
