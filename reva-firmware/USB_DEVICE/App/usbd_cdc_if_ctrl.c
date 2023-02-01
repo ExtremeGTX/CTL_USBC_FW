@@ -43,6 +43,7 @@ uint8_t CDC_fill_receive_buffer(USBD_HandleTypeDef *hUsbDeviceFS, uint8_t *incom
 
         if (tempHeadPos == rxBufferTailPos)
         {
+            USBD_CDC_ReceivePacket(hUsbDeviceFS);
             return USBD_FAIL;
         }
     }
@@ -56,6 +57,7 @@ uint8_t CDC_fill_receive_buffer(USBD_HandleTypeDef *hUsbDeviceFS, uint8_t *incom
 void CDC_Read_RX_FS(void)
 {
     char c;
+    // Local buffer for processing data in rxBuffer
     static char buf[LOCAL_BUFFER_SIZE];
     static size_t buf_index = 0;
 
@@ -87,12 +89,10 @@ void CDC_Read_RX_FS(void)
         buf[buf_index] = c;
         buf_index++;
 
-        if (buf_index > (sizeof(buf) / sizeof(buf[0])))
+        if (buf_index >= (sizeof(buf) / sizeof(buf[0])))
         {
-            printf("BUFFER OVERFLOW, COMMANDS DROPPED\r\n");
-
             buf_index = 0;
-
+            printf("BUFFER OVERFLOW, COMMANDS DROPPED\r\n");
             return;
         }
     }
