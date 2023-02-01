@@ -1,3 +1,15 @@
+/**
+******************************************************************************
+* @file    switch_ctrl.c
+* @authors  Mudit Sharma
+* @contact  mudit.sharma@codethink.co.uk
+* @brief   Source file for switch control handler
+******************************************************************************
+* Ⓒ  Codethink Limited
+*
+******************************************************************************
+*/
+
 #include "switch_ctrl.h"
 
 // High speed switch pin declaration
@@ -71,7 +83,6 @@ source_sink_t port_c =
         .port_source_pin = GPIO_PIN_5,
 };
 
-
 // switch control logic
 
 /**
@@ -113,7 +124,6 @@ static void cc_switch_control(port_ctrl_e mode)
         HAL_GPIO_WritePin(switch_c.ctrl_port, switch_c.ctrl_pin, GPIO_PIN_SET);
     }
 }
-
 
 /**
  * @brief Control the USB 2 Data line switch
@@ -256,7 +266,6 @@ void switch_power(port_ctrl_e mode, sink_source_ctrl_e power_ctrl)
         HAL_GPIO_WritePin(port_a.port_source_bank, port_a.port_source_pin, GPIO_PIN_RESET);
     }
 }
-
 
 void port_switch_control(port_ctrl_e mode, sink_source_ctrl_e power_ctrl)
 {

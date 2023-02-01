@@ -1,3 +1,15 @@
+/**
+******************************************************************************
+* @file    at_cmds.h
+* @authors  Mudit Sharma, John Graham
+* @contact  mudit.sharma@codethink.co.uk, john.graham@codethink.co.uk
+* @brief   Header file for AT command handler for USB switch.
+******************************************************************************
+* Ⓒ  Codethink Limited
+*
+******************************************************************************
+*/
+
 #ifndef _AT_CMDS_
 #define _AT_CMDS_
 
@@ -12,7 +24,7 @@
 #include "usbd_cdc_if.h"
 #include "switch_ctrl.h"
 
-// Enum defining detecting AT cmds. 
+// Enum defining detecting AT cmds.
 typedef enum
 {
   AT_ENTER,
@@ -29,19 +41,18 @@ typedef enum
   AT_UNKNOWN_CMD,
 } at_cmds_e;
 
-
 /**
- * @brief Prase input buffer data 
- * 
+ * @brief Prase input buffer data
+ *
  * @param char *rx_data: receive buffer to pass
- * @return at_cmd_e: Recognized AT cmd  
-*/
+ * @return at_cmd_e: Recognized AT cmd
+ */
 at_cmds_e parse_input(const char *rx_data);
 
 /**
- * @brief Process received data and respond to recognized 
- * AT commands.  
-*/
+ * @brief Process received data and respond to recognized
+ * AT commands.
+ */
 void process_input(const char *input);
 
 #endif

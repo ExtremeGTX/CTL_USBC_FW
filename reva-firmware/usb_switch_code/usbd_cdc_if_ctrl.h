@@ -1,4 +1,17 @@
-#pragma once
+/**
+******************************************************************************
+* @file    usbd_cdc_if_ctrl.h
+* @authors  Mudit Sharma, John Graham
+* @contact  mudit.sharma@codethink.co.uk, john.graham@codethink.co.uk
+* @brief   Header file for CDC communication handler
+******************************************************************************
+* Ⓒ  Codethink Limited
+*
+******************************************************************************
+*/
+
+#ifndef _USBD_CDC_IF_CTRL_
+#define _USBD_CDC_IF_CTRL_
 
 #include "usbd_cdc_if.h"
 #include "stdint.h"
@@ -49,3 +62,5 @@ void CDC_Read_RX_FS(void);
  * @brief Flush  CDC external buffer
  */
 void CDC_Flush_RX_buffer();
+
+#endif

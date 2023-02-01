@@ -1,4 +1,17 @@
-#pragma once
+/**
+******************************************************************************
+* @file    switch_ctrl.h
+* @authors  Mudit Sharma
+* @contact  mudit.sharma@codethink.co.uk
+* @brief   Header file for switch control handler
+******************************************************************************
+* Ⓒ  Codethink Limited
+*
+******************************************************************************
+*/
+
+#ifndef _SWITCH_CTRL_H_
+#define _SWITCH_CTRL_H_
 
 #include "gpio.h"
 #include <stdint.h>
@@ -99,3 +112,5 @@ void switch_power(port_ctrl_e mode, sink_source_ctrl_e power_ctrl);
  *  -PORTS_DISABLED
  */
 void port_switch_control(port_ctrl_e mode, sink_source_ctrl_e power_ctrl);
+
+#endif

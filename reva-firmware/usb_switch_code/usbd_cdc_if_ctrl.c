@@ -1,3 +1,15 @@
+/**
+******************************************************************************
+* @file    usbd_cdc_if_ctrl.c
+* @authors  Mudit Sharma, John Graham
+* @contact  mudit.sharma@codethink.co.uk, john.graham@codethink.co.uk
+* @brief   Source file for CDC communication handler
+******************************************************************************
+* Ⓒ  Codethink Limited
+*
+******************************************************************************
+*/
+
 #include "usbd_cdc_if_ctrl.h"
 #include "at_cmds.h"
 

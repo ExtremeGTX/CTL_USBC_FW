@@ -1,3 +1,15 @@
+/**
+******************************************************************************
+* @file    at_cmds.h
+* @authors  Mudit Sharma, John Graham
+* @contact  mudit.sharma@codethink.co.uk, john.graham@codethink.co.uk
+* @brief   Source file for AT command handler for USB switch.
+******************************************************************************
+* Ⓒ  Codethink Limited
+*
+******************************************************************************
+*/
+
 #include "at_cmds.h"
 #include "main.h"
 
