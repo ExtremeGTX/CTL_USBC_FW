@@ -39,16 +39,6 @@
 
 #define RS2228_LOGIC_INVERTED 0
 
-#define MCU_SWITCH_EN_SS2 GPIO_PIN_5
-#define MCU_SWITCH_EN_SS1 GPIO_PIN_6
-#define MCU_SWITCH_CONTROL_SS1 GPIO_PIN_8
-#define MCU_SWITCH_CONTROL_SS2 GPIO_PIN_9
-
-#define MCU_SWITCH_EN_C GPIO_PIN_7
-#define MCU_SWITCH_EN_D GPIO_PIN_8
-#define MCU_SWITCH_CONTROL_C GPIO_PIN_7
-#define MCU_SWITCH_CONTROL_D GPIO_PIN_6
-
 // Struct definition for switches
 typedef struct hs_switch
 {

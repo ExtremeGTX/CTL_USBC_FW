@@ -25,17 +25,14 @@ If you are using a USB-C to USB-C cable to connecting a peripheral to host and t
 ## Files to look into for USB switch code
 
 ### Code for handling AT commands
-reva-firmware/Core/Src/at_cmds.c
-reva-firmware/Core/Inc/at_cmds.h
+[usb_switch_code](/usb_switch_code/)
 
 ### Code for handling USB line switching
-reva-firmware/Core/Inc/switch_ctrl.h
-reva-firmware/Core/Src/switch_ctrl.c
+[usb_switch_code](/usb_switch_code/)
 
 ### Code for handling USB CDC communication
-reva-firmware/USB_DEVICE/App/usbd_cdc_if.c
-reva-firmware/USB_DEVICE/App/usbd_cdc_if.h
-reva-firmware/USB_DEVICE/App/usbd_desc.c
+[usb_switch_code](usb_switch_code/)
+[USB_DEVICE](/USB_DEVICE/App/)
 
 ## How to build
 

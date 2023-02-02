@@ -62,7 +62,7 @@ at_cmds_e parse_input(const char *rx_data)
         if (rx_data[2] == '+')
         {
             // is the '+' followed by "GMR"?
-            if ((strncmp(&rx_data[3], "GMR", 3) == 0) || (strncmp(&rx_data[3], "GMR", 3) == 0))
+            if ((strncmp(&rx_data[3], "GMR", 3) == 0))
             {
                 return AT_INFO;
             }
