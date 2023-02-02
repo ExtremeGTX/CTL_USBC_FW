@@ -1,0 +1,19 @@
+image: debian:bullseye
+
+build-job:
+  stage: build
+  variables:
+    PROJECT_PATH: "$CI_PROJECT_DIR"
+    BUILD_SCRIPT_PATH: "${PROJECT_PATH}/build_scripts.sh"
+    ARTIFACT_FOLDER_PATH: "${PROJECT_PATH}/artifact_folder"
+  script:
+    - apt update && apt install make && apt -y install gcc-arm-none-eabi
+    - source ${BUILD_SCRIPT_PATH}
+    - build_reva ${PROJECT_PATH}
+    - build_mvp ${PROJECT_PATH}
+    - move_build_artifacts ${PROJECT_PATH} ${ARTIFACT_FOLDER_PATH}
+  artifacts:
+    when: on_success
+    expire_in: "30 days"
+    paths:
+      - "${ARTIFACT_FOLDER_PATH}"
