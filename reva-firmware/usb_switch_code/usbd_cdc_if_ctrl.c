@@ -46,12 +46,9 @@ static bool CDC_RX_Get_Next_Char(char *ch)
     // Set passed in char to new value in Rx buffer
     *ch = rxBuffer[rxBufferTailPos];
 
-    // Increment tail position
-    rxBufferTailPos++;
-
-    // Make sure the tail position does not go beyond
-    // the RX buffer size
-    rxBufferTailPos %= APP_RX_DATA_SIZE;
+    // Do this with only one write, so an interrupt never sees it out
+    // of bounds.
+    rxBufferTailPos = (rxBufferTailPos + 1) % APP_RX_DATA_SIZE;
 
     return true;
 }

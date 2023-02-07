@@ -1,14 +1,11 @@
-# Default port for openocd.
-target remote :3333
+target extended-remote | \
+       openocd -f openocd.cfg -c "gdb_port pipe; log_output openocd.log"
 
-# Common fault handlers.
-break HardFault_Handler
-break MemManage_Handler
-break BusFault_Handler
-break UsageFault_Handler
+monitor cortex_m vector_catch hard_err reset
+
 
 # See documentation below.
-define load-reset-continue
+define load-reset-halt
   load
 
   # Halt then continue because just "monitor reset" lets the target keep
@@ -17,13 +14,12 @@ define load-reset-continue
   monitor reset halt
 end
 
-document load-reset-continue
-Custom function to load the binary, reset the target, and set it
-running.
+document load-reset-halt
+Convenience function to load the binary.
 
-We need to do a full reset of the target (beyond what just a "load"
-does) because then any connected USB serial will re-establish its
-connection.
+We need to do a full reset of the target when we (beyond what just a
+"load" does) because then any connected USB serial will re-establish
+its connection.
 end
 
 
