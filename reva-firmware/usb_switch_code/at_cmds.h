@@ -43,6 +43,7 @@
 #include "stdio.h"
 #include "usbd_cdc_if.h"
 #include "switch_ctrl.h"
+#include <stdlib.h>
 
 // Enum defining detecting AT cmds.
 typedef enum

@@ -39,7 +39,7 @@
 #define DELAY_BW_SWITCH 500 // ms
 
 const char *FIRMWARE_VERSION = "1.0";
-const char *HARDWARE_VERSION = "Rev-B";
+const char *HARDWARE_VERSION = "Rev-C";
 uint8_t selected_port = AT_PORTS_DISABLED;
 
 at_cmds_e parse_input(const char *rx_data)
@@ -51,7 +51,9 @@ at_cmds_e parse_input(const char *rx_data)
   }
 
   // Does the received string starts with AT?
-  if (strncmp(rx_data, "AT", 2) != 0) // If first 2 char != 'AT'
+  if (strncmp(rx_data, "AT", 2) != 0 ||
+      strlen(rx_data) >
+          11) // If first 2 char != 'AT' or cmd is longer than expected
   {
     // return unknown if not
     return AT_UNKNOWN_CMD;
@@ -72,47 +74,57 @@ at_cmds_e parse_input(const char *rx_data)
       else if (strncmp(&rx_data[3], "PORT", 4) == 0)
       {
         // is "PORT" followed by '='?
-        if (rx_data[7] == '=')
+        if (rx_data[7] == '=' && strlen(rx_data) > 8)
         {
-          if (rx_data[8] == '0')
-          {
-            return AT_PORTS_DISABLED;
-          }
-          else if (rx_data[8] == '1')
-          {
-            return AT_PORT_A_SOURCE_C;
-          }
-          else if (rx_data[8] == '2')
-          {
-            return AT_PORT_A_SOURCE_B;
-          }
-          else if (rx_data[8] == '3')
-          {
-            return AT_PORT_C_SOURCE_A;
-          }
-          else if (rx_data[8] == '4')
-          {
-            return AT_PORT_B_SOURCE_A;
-          }
-          else if (rx_data[8] == '5')
-          {
-            return AT_PORT_A_C_ON;
-          }
-          else if (rx_data[8] == '6')
-          {
-            return AT_PORT_A_B_ON;
-          }
-          else if (rx_data[8] == '7')
-          {
-            return AT_PORT_A_B_C_ON;
-          }
-          else if (rx_data[8] == '?')
+          char *mode_char = NULL;
+          int8_t mode_num = -1; // init with -1 to prevent false
+          mode_num = strtol(&rx_data[8], &mode_char, 10);
+          if (*mode_char == '?')
           {
             return AT_PORT_NUMBERS_QUERY;
           }
-          else
+          else if (*mode_char != '\0')
           {
             return AT_PORT_CMD_ERROR;
+          }
+          else
+          {
+            if (mode_num == 0)
+            {
+              return AT_PORTS_DISABLED;
+            }
+            else if (mode_num == 1)
+            {
+              return AT_PORT_A_SOURCE_C;
+            }
+            else if (mode_num == 2)
+            {
+              return AT_PORT_A_SOURCE_B;
+            }
+            else if (mode_num == 3)
+            {
+              return AT_PORT_C_SOURCE_A;
+            }
+            else if (mode_num == 4)
+            {
+              return AT_PORT_B_SOURCE_A;
+            }
+            else if (mode_num == 5)
+            {
+              return AT_PORT_A_C_ON;
+            }
+            else if (mode_num == 6)
+            {
+              return AT_PORT_A_B_ON;
+            }
+            else if (mode_num == 7)
+            {
+              return AT_PORT_A_B_C_ON;
+            }
+            else
+            {
+              return AT_PORT_CMD_ERROR;
+            }
           }
         }
         else if (rx_data[7] == '?')
