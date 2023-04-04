@@ -58,9 +58,9 @@ USBD_HandleTypeDef hUsbDeviceFS;
 /* USER CODE END 1 */
 
 /**
- * Init USB device Library, add supported class and start the library
- * @retval None
- */
+  * Init USB device Library, add supported class and start the library
+  * @retval None
+  */
 void MX_USB_DEVICE_Init(void)
 {
   /* USER CODE BEGIN USB_DEVICE_Init_PreTreatment */
@@ -98,9 +98,10 @@ void MX_USB_DEVICE_Init(void)
 }
 
 /**
- * @}
- */
+  * @}
+  */
 
 /**
- * @}
- */
+  * @}
+  */
+

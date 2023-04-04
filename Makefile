@@ -1,2 +1,2 @@
 all:
-	make -C reva-firmware/Debug all
+	make -C firmware/generated/Debug all
