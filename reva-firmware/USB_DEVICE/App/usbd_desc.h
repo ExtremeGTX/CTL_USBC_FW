@@ -54,6 +54,7 @@ extern "C"
 
   /* USER CODE BEGIN EXPORTED_CONSTANTS */
 
+#define USBD_PRODUCT_STRING_FS "USB switch rev-C"
   /* USER CODE END EXPORTED_CONSTANTS */
 
   /**
