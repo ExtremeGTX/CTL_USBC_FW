@@ -48,7 +48,6 @@
 // Enum defining detecting AT cmds.
 typedef enum
 {
-  AT_ENTER,
   AT_TEST,
   AT_INFO,
   AT_PORTS_DISABLED,

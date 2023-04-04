@@ -34,12 +34,13 @@
 #include "main.h"
 #include "stm32f1xx_hal.h"
 #include "switch_ctrl.h"
+#include "usbd_desc.h"
 
 // Delay between USB port switching
 #define DELAY_BW_SWITCH 500 // ms
 
 const char *FIRMWARE_VERSION = "1.0";
-const char *HARDWARE_VERSION = "Rev-C";
+const char *HARDWARE_VERSION = USBD_PRODUCT_STRING_FS;
 uint8_t selected_port = AT_PORTS_DISABLED;
 
 at_cmds_e parse_input(const char *rx_data)
@@ -94,12 +95,13 @@ at_cmds_e parse_input(const char *rx_data)
               return AT_PORTS_DISABLED;
             }
             else if (mode_num == 1)
-            {
-              return AT_PORT_A_SOURCE_C;
+            { 
+              return AT_PORT_A_C_ON;
             }
             else if (mode_num == 2)
             {
-              return AT_PORT_A_SOURCE_B;
+              return AT_PORT_A_B_ON;
+            
             }
             else if (mode_num == 3)
             {
@@ -111,11 +113,11 @@ at_cmds_e parse_input(const char *rx_data)
             }
             else if (mode_num == 5)
             {
-              return AT_PORT_A_C_ON;
+              return AT_PORT_A_SOURCE_C; 
             }
             else if (mode_num == 6)
             {
-              return AT_PORT_A_B_ON;
+              return AT_PORT_A_SOURCE_B;
             }
             else if (mode_num == 7)
             {
@@ -145,14 +147,12 @@ at_cmds_e parse_input(const char *rx_data)
     }
   }
   // For any other unknown case
-  // Note: Code not never reach here as all cases should be handled above
+  // Note: Code should never reach here as all cases should be handled above
   return AT_UNKNOWN_CMD;
 }
 
-void process_input(const char *input)
-{
-  switch (parse_input(input))
-  {
+void process_input(const char *input) {
+  switch (parse_input(input)) {
   case AT_TEST:
     printf("\rOK\r\n");
     break;
@@ -163,101 +163,86 @@ void process_input(const char *input)
     break;
 
   case AT_PORTS_DISABLED:
-    port_switch_control(PORTS_DISABLED, PORTS_OFF);
+    port_switch_disable(PORTS_OFF);
     selected_port = AT_PORTS_DISABLED;
     printf("\rOK\r\n");
     break;
 
   case AT_PORT_A_SOURCE_B:
-    port_switch_control(PORTS_DISABLED, PORTS_OFF);
+    port_switch_disable(PORTS_OFF);
     HAL_Delay(DELAY_BW_SWITCH);
-    port_switch_control(PORT_D_EN, PORT_SINK);
+    port_switch_enable(PORT_B_EN, PORT_SOURCE);
     selected_port = AT_PORT_A_SOURCE_B;
     printf("\rOK\r\n");
     break;
 
   case AT_PORT_A_SOURCE_C:
-    port_switch_control(PORTS_DISABLED, PORTS_OFF);
+    port_switch_disable(PORTS_OFF);
     HAL_Delay(DELAY_BW_SWITCH);
-    port_switch_control(PORT_C_EN, PORT_SINK);
+    port_switch_enable(PORT_C_EN, PORT_SOURCE);
     selected_port = AT_PORT_A_SOURCE_C;
     printf("\rOK\r\n");
     break;
 
   case AT_PORT_B_SOURCE_A:
-    port_switch_control(PORTS_DISABLED, PORTS_OFF);
+    port_switch_disable(PORTS_OFF);
     HAL_Delay(DELAY_BW_SWITCH);
-    port_switch_control(PORT_D_EN, PORT_SOURCE);
+    port_switch_enable(PORT_B_EN, PORT_SINK);
     selected_port = AT_PORT_B_SOURCE_A;
     printf("\rOK\r\n");
     break;
 
   case AT_PORT_C_SOURCE_A:
-    port_switch_control(PORTS_DISABLED, PORTS_OFF);
+    port_switch_disable(PORTS_OFF);
     HAL_Delay(DELAY_BW_SWITCH);
-    port_switch_control(PORT_C_EN, PORT_SOURCE);
+    port_switch_enable(PORT_C_EN, PORT_SINK);
     selected_port = AT_PORT_C_SOURCE_A;
     printf("\rOK\r\n");
     break;
 
   case AT_PORT_A_B_ON:
-    port_switch_control(PORTS_DISABLED, PORTS_OFF);
+    port_switch_disable(PORTS_OFF);
     HAL_Delay(DELAY_BW_SWITCH);
-    port_switch_control(PORT_D_EN, PORT_BI_DIR);
+    port_switch_enable(PORT_B_EN, PORT_BI_DIR);
     selected_port = AT_PORT_A_B_ON;
     HAL_Delay(DELAY_BW_SWITCH);
     printf("\rOK\r\n");
     break;
 
   case AT_PORT_A_C_ON:
-    port_switch_control(PORTS_DISABLED, PORTS_OFF);
+    port_switch_disable(PORTS_OFF);
     HAL_Delay(DELAY_BW_SWITCH);
-    port_switch_control(PORT_C_EN, PORT_BI_DIR);
+    port_switch_enable(PORT_C_EN, PORT_BI_DIR);
     selected_port = AT_PORT_A_C_ON;
     HAL_Delay(DELAY_BW_SWITCH);
     printf("\rOK\r\n");
     break;
 
   case AT_PORT_A_B_C_ON:
-    port_switch_control(PORTS_DISABLED, PORTS_OFF);
+    port_switch_disable(PORTS_OFF);
     HAL_Delay(DELAY_BW_SWITCH);
-    port_switch_control(PORTS_DISABLED, BOTH_PORT_POWER_ON);
+    port_switch_disable(BOTH_PORT_POWER_ON);
     selected_port = AT_PORT_A_B_C_ON;
     HAL_Delay(DELAY_BW_SWITCH);
     printf("\rOK\r\n");
     break;
 
   case AT_PORT_SEL:
-    if (selected_port == AT_PORT_A_SOURCE_B)
-    {
+    if (selected_port == AT_PORT_A_SOURCE_B) {
       printf("\rA source B sink\r\n");
-    }
-    else if (selected_port == AT_PORT_A_SOURCE_C)
-    {
+    } else if (selected_port == AT_PORT_A_SOURCE_C) {
       printf("\rA source C sink\r\n");
-    }
-    else if (selected_port == AT_PORT_B_SOURCE_A)
-    {
+    } else if (selected_port == AT_PORT_B_SOURCE_A) {
       printf("\rB source A sink\r\n");
-    }
-    else if (selected_port == AT_PORT_C_SOURCE_A)
-    {
+    } else if (selected_port == AT_PORT_C_SOURCE_A) {
       printf("\rC source A sink\r\n");
-    }
-    else if (selected_port == AT_PORT_A_C_ON)
-    {
+    } else if (selected_port == AT_PORT_A_C_ON) {
       printf("\rBi-Dir A - C\r\n");
-    }
-    else if (selected_port == AT_PORT_A_B_ON)
-    {
+    } else if (selected_port == AT_PORT_A_B_ON) {
       printf("\rBi-Dir A - B\r\n");
-    }
-    else if (selected_port == AT_PORT_A_B_C_ON)
-    {
+    } else if (selected_port == AT_PORT_A_B_C_ON) {
       printf("\rAll ports power on\r\n");
-    }
-    else
-    {
+    } else {
       printf("\rPORTS DISABLED\r\n");
     }
     break;
@@ -271,7 +256,7 @@ void process_input(const char *input)
     break;
 
   case AT_UNKNOWN_CMD:
-    port_switch_control(PORTS_DISABLED, PORTS_OFF);
+    port_switch_disable(PORTS_OFF);
     printf("\rERROR: UNKNOWN COMMAND\r\n");
     break;
 

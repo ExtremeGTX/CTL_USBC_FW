@@ -37,8 +37,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#define RS2228_LOGIC_INVERTED 0
-
 // Struct definition for switches
 typedef struct hs_switch
 {
@@ -70,16 +68,12 @@ typedef struct source_sink
     uint16_t port_source_pin;
     GPIO_TypeDef *port_sink_bank;
     uint16_t port_sink_pin;
-    ;
 } source_sink_t;
 
 typedef enum
 {
     PORT_C_EN,
-    PORT_D_EN,
-    CC_SW_OFF,
-    DL_SW_OFF,
-    SS_SW_OFF,
+    PORT_B_EN,
     PORTS_DISABLED,
 } port_ctrl_e;
 
@@ -88,39 +82,44 @@ typedef enum
     PORT_SINK,
     PORT_SOURCE,
     PORT_BI_DIR,
-    BOTH_PORT_POWER_ON,
-    PORTS_OFF,
-} sink_source_ctrl_e;
+} port_on_power_ctrl_e;
 
-typedef enum
+typedef enum 
 {
-    MCU_SWITCH_POWER_B_SINK = GPIO_PIN_2,
-    MCU_SWITCH_POWER_B_SOURCE = GPIO_PIN_3,
-    MCU_SWITCH_POWER_C_SINK = GPIO_PIN_4,
-    MCU_SWITCH_POWER_C_SOURCE = GPIO_PIN_5,
-} switch_pwr_ctrl_e;
+  BOTH_PORT_POWER_ON,
+  PORTS_OFF,
+} port_off_power_ctrl_e;
+
+typedef enum 
+{
+    LED_PORT_A_C,
+    LED_PORT_A_B,
+    LED_PORT_A_B_C,
+    LEDS_OFF,
+}led_states_e;
 
 /**
- * @brief Control source and sink switch for downstream portS
- * B and C
+ * @brief Disable data lines set power mode.
  *
- * @param port_ctrl_e mode: Set switch mode
- * @note Possible inputs param value:
- *  -PORT_C_EN,
- *  -PORT_D_EN,
- *  -PORTS_DISABLED
+ * @param port_off_power_ctrl_e power_ctrl: Set power
+ *  - BOTH_PORT_POWER_ON
+ *  - PORTS_OFF
  */
-void switch_power(port_ctrl_e mode, sink_source_ctrl_e power_ctrl);
+void port_switch_disable(port_off_power_ctrl_e power_ctrl);
 
 /**
- * @brief Control port switching
+ * @brief Enable switch data lines and set power mode. 
  *
- * @param port_ctrl_e mode: Set switch mode
- * @note Possible inputs param value:
- *  -PORT_C_EN,
- *  -PORT_D_EN,
- *  -PORTS_DISABLED
+ * @param port_ctrl_e mode: Set data line switch mode
+ *  - PORT_C_EN,
+ *  - PORT_B_EN,
+ *  - PORTS_DISABLED,
+ * @param port_on_power_ctrl_e: Set power control mode when data lines
+ * are enabled
+ *  - PORT_SINK,
+ *  - PORT_SOURCE,
+ *  - PORT_BI_DIR,
  */
-void port_switch_control(port_ctrl_e mode, sink_source_ctrl_e power_ctrl);
+void port_switch_enable(port_ctrl_e mode, port_on_power_ctrl_e power_ctrl);
 
 #endif

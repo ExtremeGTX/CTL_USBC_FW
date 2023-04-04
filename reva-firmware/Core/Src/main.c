@@ -95,7 +95,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
 
   // Disable all ports
-  port_switch_control(PORTS_DISABLED, PORTS_OFF);
+  port_switch_disable(PORTS_OFF);
   // Error_Handler();
   while (1)
   {
