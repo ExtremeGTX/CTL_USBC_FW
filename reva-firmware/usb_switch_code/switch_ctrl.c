@@ -255,6 +255,8 @@ static void ss_switch_control(port_ctrl_e mode)
 
 
 void port_switch_enable(port_ctrl_e mode, port_on_power_ctrl_e power_ctrl) {
+  port_switch_disable(PORTS_OFF);
+  HAL_Delay(DELAY_BW_SWITCH);
   switch (mode) {
   case PORT_C_EN:
      hs_switch_control(mode);

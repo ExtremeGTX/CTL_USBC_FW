@@ -37,6 +37,9 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+// Delay between USB port switching
+#define DELAY_BW_SWITCH 500 // ms
+
 // Struct definition for switches
 typedef struct hs_switch
 {

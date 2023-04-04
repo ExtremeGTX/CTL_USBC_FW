@@ -35,13 +35,11 @@
 #include "stm32f1xx_hal.h"
 #include "switch_ctrl.h"
 #include "usbd_desc.h"
+#include <stdint.h>
 
-// Delay between USB port switching
-#define DELAY_BW_SWITCH 500 // ms
-
-const char *FIRMWARE_VERSION = "1.0";
+const char *FIRMWARE_VERSION = "2.0";
 const char *HARDWARE_VERSION = USBD_PRODUCT_STRING_FS;
-uint8_t selected_port = AT_PORTS_DISABLED;
+at_cmds_e selected_port = AT_PORTS_DISABLED;
 
 at_cmds_e parse_input(const char *rx_data)
 {
@@ -152,7 +150,8 @@ at_cmds_e parse_input(const char *rx_data)
 }
 
 void process_input(const char *input) {
-  switch (parse_input(input)) {
+   at_cmds_e parsed_input = parse_input(input);
+  switch (parsed_input) {
   case AT_TEST:
     printf("\rOK\r\n");
     break;
@@ -164,66 +163,49 @@ void process_input(const char *input) {
 
   case AT_PORTS_DISABLED:
     port_switch_disable(PORTS_OFF);
-    selected_port = AT_PORTS_DISABLED;
+    selected_port = parsed_input;
     printf("\rOK\r\n");
     break;
 
   case AT_PORT_A_SOURCE_B:
-    port_switch_disable(PORTS_OFF);
-    HAL_Delay(DELAY_BW_SWITCH);
     port_switch_enable(PORT_B_EN, PORT_SOURCE);
-    selected_port = AT_PORT_A_SOURCE_B;
+    selected_port = parsed_input;
     printf("\rOK\r\n");
     break;
 
   case AT_PORT_A_SOURCE_C:
-    port_switch_disable(PORTS_OFF);
-    HAL_Delay(DELAY_BW_SWITCH);
     port_switch_enable(PORT_C_EN, PORT_SOURCE);
-    selected_port = AT_PORT_A_SOURCE_C;
+    selected_port = parsed_input;
     printf("\rOK\r\n");
     break;
 
   case AT_PORT_B_SOURCE_A:
-    port_switch_disable(PORTS_OFF);
-    HAL_Delay(DELAY_BW_SWITCH);
     port_switch_enable(PORT_B_EN, PORT_SINK);
-    selected_port = AT_PORT_B_SOURCE_A;
+    selected_port = parsed_input;
     printf("\rOK\r\n");
     break;
 
   case AT_PORT_C_SOURCE_A:
-    port_switch_disable(PORTS_OFF);
-    HAL_Delay(DELAY_BW_SWITCH);
     port_switch_enable(PORT_C_EN, PORT_SINK);
-    selected_port = AT_PORT_C_SOURCE_A;
+    selected_port = parsed_input;
     printf("\rOK\r\n");
     break;
 
   case AT_PORT_A_B_ON:
-    port_switch_disable(PORTS_OFF);
-    HAL_Delay(DELAY_BW_SWITCH);
     port_switch_enable(PORT_B_EN, PORT_BI_DIR);
-    selected_port = AT_PORT_A_B_ON;
-    HAL_Delay(DELAY_BW_SWITCH);
+    selected_port = parsed_input;
     printf("\rOK\r\n");
     break;
 
   case AT_PORT_A_C_ON:
-    port_switch_disable(PORTS_OFF);
-    HAL_Delay(DELAY_BW_SWITCH);
     port_switch_enable(PORT_C_EN, PORT_BI_DIR);
-    selected_port = AT_PORT_A_C_ON;
-    HAL_Delay(DELAY_BW_SWITCH);
+    selected_port = parsed_input;
     printf("\rOK\r\n");
     break;
 
   case AT_PORT_A_B_C_ON:
-    port_switch_disable(PORTS_OFF);
-    HAL_Delay(DELAY_BW_SWITCH);
     port_switch_disable(BOTH_PORT_POWER_ON);
-    selected_port = AT_PORT_A_B_C_ON;
-    HAL_Delay(DELAY_BW_SWITCH);
+    selected_port = parsed_input;
     printf("\rOK\r\n");
     break;
 
