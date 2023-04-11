@@ -8,3 +8,5 @@
 **.bin
 .vscode/
 openocd.log
+.clangd
+compile_commands.json
