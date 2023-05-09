@@ -3,9 +3,10 @@
 **.o
 **.d
 **.elf
-**.list
 **.map
 **.bin
+**.list
+!objects.list 
 .vscode/
 openocd.log
 .clangd
