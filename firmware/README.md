@@ -16,10 +16,10 @@ USB switch is configured to be a USB CDC device. Send the following command usin
 | "AT+GMR\n"    | -      | -      | -      | Returns device info |
 | "AT+PORT=1\n" | Bi-dir | 0      | Bi-dir | "OK\n"              |
 | "AT+PORT=2\n" | Bi-dir | Bi-dir | 0      | "OK\n"              |
-| "AT+PORT=3\n" | Sink   | Source | 0      | "OK\n"              |
-| "AT+PORT=4\n" | Sink   | 0      | Source | "OK\n"              |
-| "AT+PORT=5\n" | Source | Sink   | 0      | "OK\n"              |
-| "AT+PORT=6\n" | Source | 0      | Sink   | "OK\n"              |
+| "AT+PORT=3\n" | Sink   | 0      | Source | "OK\n"              |
+| "AT+PORT=4\n" | Sink   | Source | 0      | "OK\n"              |
+| "AT+PORT=5\n" | Source | 0      | Sink   | "OK\n"              |
+| "AT+PORT=6\n" | Source | Sink   | 0      | "OK\n"              |
 | "AT+PORT=7\n" | POWER  | POWER  | POWER  | "OK\n"              |
 | "AT+PORT=?\n" | -      | -      | -      | "\r2\r\nOK\r\n"     |
 | "AT+PORT?\n"  | -      | -      | -      | Returns which ports are active<br/> *Output can be:*<br/><ul><li>"\rA source B sink\r\n"</li><li>"\rA source C sink\r\n"</li><li>"\rB source A sink\r\n"</li><li>"\rC source A sink\r\n"</li><li>"\rBi-Dir A - C\r\n"</li><li>"\rBi-Dir A - B\r\n"</li><li>"\rAll ports power on\r\n"</li></ul>|
