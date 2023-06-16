@@ -41,11 +41,9 @@ const char *FIRMWARE_VERSION = "2.0";
 const char *HARDWARE_VERSION = USBD_PRODUCT_STRING_FS;
 at_cmds_e selected_port = AT_PORTS_DISABLED;
 
-at_cmds_e parse_input(const char *rx_data)
-{
+at_cmds_e parse_input(const char *rx_data) {
 
-  if (!strcmp(rx_data, "AT"))
-  {
+  if (!strcmp(rx_data, "AT")) {
     return AT_TEST;
   }
 
@@ -59,88 +57,56 @@ at_cmds_e parse_input(const char *rx_data)
   }
 
   // if first 2 bytes are "AT"
-  else
-  {
+  else {
     // does it have a '+' after?
-    if (rx_data[2] == '+')
-    {
+    if (rx_data[2] == '+') {
       // is the '+' followed by "GMR"?
-      if ((strncmp(&rx_data[3], "GMR", 3) == 0))
-      {
+      if ((strncmp(&rx_data[3], "GMR", 3) == 0)) {
         return AT_INFO;
       }
       // is the '+' followed by "PORT"?
-      else if (strncmp(&rx_data[3], "PORT", 4) == 0)
-      {
+      else if (strncmp(&rx_data[3], "PORT", 4) == 0) {
         // is "PORT" followed by '='?
-        if (rx_data[7] == '=' && strlen(rx_data) > 8)
-        {
+        if (rx_data[7] == '=' && strlen(rx_data) > 8) {
           char *mode_char = NULL;
           int8_t mode_num = -1; // init with -1 to prevent false
           mode_num = strtol(&rx_data[8], &mode_char, 10);
-          if (*mode_char == '?')
-          {
+          if (*mode_char == '?') {
             return AT_PORT_NUMBERS_QUERY;
-          }
-          else if (*mode_char != '\0')
-          {
+          } else if (*mode_char != '\0') {
             return AT_PORT_CMD_ERROR;
-          }
-          else
-          {
-            if (mode_num == 0)
-            {
+          } else {
+            if (mode_num == 0) {
               return AT_PORTS_DISABLED;
-            }
-            else if (mode_num == 1)
-            { 
+            } else if (mode_num == 1) {
               return AT_PORT_A_C_ON;
-            }
-            else if (mode_num == 2)
-            {
+            } else if (mode_num == 2) {
               return AT_PORT_A_B_ON;
-            
-            }
-            else if (mode_num == 3)
-            {
+            } else if (mode_num == 3) {
               return AT_PORT_C_SOURCE_A;
-            }
-            else if (mode_num == 4)
-            {
+            } else if (mode_num == 4) {
               return AT_PORT_B_SOURCE_A;
-            }
-            else if (mode_num == 5)
-            {
-              return AT_PORT_A_SOURCE_C; 
-            }
-            else if (mode_num == 6)
-            {
+            } else if (mode_num == 5) {
+              return AT_PORT_A_SOURCE_C;
+            } else if (mode_num == 6) {
               return AT_PORT_A_SOURCE_B;
-            }
-            else if (mode_num == 7)
-            {
+            } else if (mode_num == 7) {
               return AT_PORT_A_B_C_ON;
-            }
-            else
-            {
+            } else {
               return AT_PORT_CMD_ERROR;
             }
           }
-        }
-        else if (rx_data[7] == '?')
-        {
+        } else if (rx_data[7] == '?') {
           return AT_PORT_SEL;
         }
       }
       // if not followed by "PORT" its unknown
-      else
-      {
+      else {
         return AT_UNKNOWN_CMD;
       }
     }
     // if input string starts with "AT" but it is not followed by anything
-    else
-    {
+    else {
       return AT_UNKNOWN_CMD;
     }
   }
@@ -150,7 +116,7 @@ at_cmds_e parse_input(const char *rx_data)
 }
 
 void process_input(const char *input) {
-   at_cmds_e parsed_input = parse_input(input);
+  at_cmds_e parsed_input = parse_input(input);
   switch (parsed_input) {
   case AT_TEST:
     printf("\rOK\r\n");
@@ -239,6 +205,7 @@ void process_input(const char *input) {
 
   case AT_UNKNOWN_CMD:
     port_switch_disable(PORTS_OFF);
+    selected_port = AT_UNKNOWN_CMD;
     printf("\rERROR: UNKNOWN COMMAND\r\n");
     break;
 
