@@ -6,7 +6,7 @@ Firmware for the USB Switch written using STM's toolchian
 
 ## How to use and test
 
-![Rev c ports diagram](/photos/switch_rev_c_ports.png)
+![Rev c ports diagram](../photos/switch_rev_c_ports.png)
 
 USB switch is configured to be a USB CDC device. Send the following command using a serial terminal to operate the switch. Each command sent should result in corresponding message being printed to the serial terminal. 
 
@@ -63,9 +63,25 @@ make -j all
 
 ## How to flash
 
-1. Use stm32cubeProgrammer to flash
-2. run _make flash_
-   - Make sure you have st-utils installed https://github.com/stlink-org/stlink
+### Hardware setup
+
+Connect an ST-LINK programmer to the SWD header on the USB-C switch PCB.
+
+### Software setup
+
+#### Requirements
+
+You may use either one of:
+- [stlink-tools](https://github.com/stlink-org/stlink) (CLI)
+- [STM32CubeProgrammer](https://wiki.st.com/stm32mpu/wiki/STM32CubeProgrammer) (GUI)
+
+#### stlink-tools
+
+After installing stlink-tools, run `make flash` from within the directory `generated/Debug/`.
+
+#### STM32CubeProgrammer
+
+Refer to the [official documentation](https://wiki.st.com/stm32mpu/wiki/STM32CubeProgrammer) for how to flash the compiled `.bin` file, which should be in `generated/Debug/` if you compiled the firmware successfully.
 
 ## What to install
 
