@@ -14,8 +14,8 @@ Operational logic for the USB switch can be found under [usb_switch_code](/firmw
 
 ## Product photos Rev-C
 
-![Porduct Overview](photos/rev_c.jpg)
+![Product Overview](photos/rev_c.jpg)
 
 ## Product photos Rev-A/Rev-B
 
-![Porduct Overview](photos/usb_sw_overview.png)
+![Product Overview](photos/usb_sw_overview.png)
