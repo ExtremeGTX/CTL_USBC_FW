@@ -29,7 +29,7 @@ USB switch is configured to be a USB CDC device. Send the following command usin
 * Connect the switch to the host computer using a USB-C cable. The switch should get discovered as a USB CDC device.
 * Use a serial terminal (screen, putty etc.) to interact with the device.
 * Send the commands listed in the table above and make sure the respective message is printed to the terminal. 
-* Try sending the [list of commands](/firmware/test/test_commnads.txt) (if on linux use `cat <path>/test/test_commands/txt > /dev/tty<DEV>`) to the device. Make sure the device is still responsive after the test.
+* Try sending the [list of commands](/firmware/test/test_commands.txt) (if on linux use `cat <path>/test/test_commands/txt > /dev/tty<DEV>`) to the device. Make sure the device is still responsive after the test.
 
 ### Using USB-C to USB-C cable
 
