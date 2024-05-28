@@ -52,7 +52,7 @@ If you are using a USB-C to USB-C cable to connecting a peripheral to host and t
 
 ## How to build
 
-Make sure you have _gcc-arm-none-eabi_ compiler installed on your system.
+Make sure you have `gcc-arm-none-eabi` compiler installed on your system.
 
 Run the following commands to build
 
@@ -72,25 +72,25 @@ Connect an ST-LINK programmer to the SWD header on the USB-C switch PCB.
 #### Requirements
 
 You may use either one of:
-- [stlink-tools](https://github.com/stlink-org/stlink) (CLI)
-- [STM32CubeProgrammer](https://wiki.st.com/stm32mpu/wiki/STM32CubeProgrammer) (GUI)
+* [stlink-tools](https://github.com/stlink-org/stlink) (CLI)
+* [STM32CubeProgrammer](https://wiki.st.com/stm32mpu/wiki/STM32CubeProgrammer) (GUI)
 
 #### stlink-tools
 
-After installing stlink-tools, run `make flash` from within the directory `generated/Debug/`.
+Make sure you have the `stlink-tools` package installed on your system.
+
+Run `make flash` from within the directory `generated/Debug/`.
 
 #### STM32CubeProgrammer
 
 Refer to the [official documentation](https://wiki.st.com/stm32mpu/wiki/STM32CubeProgrammer) for how to flash the compiled `.bin` file, which should be in `generated/Debug/` if you compiled the firmware successfully.
 
-## What to install
+### Optional dependencies (for debugging)
 
 On Debian:
 
 ```
 apt install \
     gdb-multiarch \
-    gcc-arm-none-eabi \
-    openocd \
-    stlink-tools
+    openocd
 ```
