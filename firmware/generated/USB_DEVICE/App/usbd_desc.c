@@ -24,6 +24,8 @@
 #include "usbd_conf.h"
 
 /* USER CODE BEGIN INCLUDE */
+#include "board_config.h"
+#include <string.h>
 
 /* USER CODE END INCLUDE */
 
@@ -238,14 +240,19 @@ uint8_t *USBD_FS_LangIDStrDescriptor(USBD_SpeedTypeDef speed, uint16_t *length)
  */
 uint8_t *USBD_FS_ProductStrDescriptor(USBD_SpeedTypeDef speed, uint16_t *length)
 {
-  if (speed == 0)
+  char product_string[sizeof(USBD_PRODUCT_STRING_FS) + BOARD_ID_MAX_LEN + 2U];
+  const char *board_id = BoardConfig_GetBoardId();
+
+  UNUSED(speed);
+
+  strcpy(product_string, USBD_PRODUCT_STRING_FS);
+  if (board_id[0] != '\0')
   {
-    USBD_GetString((uint8_t *)USBD_PRODUCT_STRING_FS, USBD_StrDesc, length);
+    strcat(product_string, " ");
+    strcat(product_string, board_id);
   }
-  else
-  {
-    USBD_GetString((uint8_t *)USBD_PRODUCT_STRING_FS, USBD_StrDesc, length);
-  }
+
+  USBD_GetString((uint8_t *)product_string, USBD_StrDesc, length);
   return USBD_StrDesc;
 }
 

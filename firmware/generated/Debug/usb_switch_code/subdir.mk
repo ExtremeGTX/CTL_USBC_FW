@@ -1,16 +1,19 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
 ../../usb_switch_code/at_cmds.c \
+../../usb_switch_code/board_config.c \
 ../../usb_switch_code/switch_ctrl.c \
 ../../usb_switch_code/usbd_cdc_if_ctrl.c 
 
 OBJS += \
 ./usb_switch_code/at_cmds.o \
+./usb_switch_code/board_config.o \
 ./usb_switch_code/switch_ctrl.o \
 ./usb_switch_code/usbd_cdc_if_ctrl.o 
 
 C_DEPS += \
 ./usb_switch_code/at_cmds.d \
+./usb_switch_code/board_config.d \
 ./usb_switch_code/switch_ctrl.d \
 ./usb_switch_code/usbd_cdc_if_ctrl.d 
 
@@ -22,6 +25,6 @@ usb_switch_code/%.o usb_switch_code/%.su: ../../usb_switch_code/%.c usb_switch_c
 clean: clean-usb-switch-code-App
 
 clean-usb-switch-code-App:
-	-$(RM) ./usb_switch_code/at_cmds.d ./usb_switch_code/at_cmds.o ./usb_switch_code/at_cmds.su ./usb_switch_code/switch_ctrl.d ./usb_switch_code/switch_ctrl.o ./usb_switch_code/switch_ctrl.su ./usb_switch_code/usbd_cdc_if_ctrl.d ./usb_switch_code/usbd_cdc_if_ctrl.o ./usb_switch_code/usbd_cdc_if_ctrl.su
+	-$(RM) ./usb_switch_code/at_cmds.d ./usb_switch_code/at_cmds.o ./usb_switch_code/at_cmds.su ./usb_switch_code/board_config.d ./usb_switch_code/board_config.o ./usb_switch_code/board_config.su ./usb_switch_code/switch_ctrl.d ./usb_switch_code/switch_ctrl.o ./usb_switch_code/switch_ctrl.su ./usb_switch_code/usbd_cdc_if_ctrl.d ./usb_switch_code/usbd_cdc_if_ctrl.o ./usb_switch_code/usbd_cdc_if_ctrl.su
 
 .PHONY: clean-usb-switch-code-App
