@@ -1,5 +1,12 @@
 # Firmware for USB C switch
 
+Originally by [CodethinkLabs](https://gitlab.com/CodethinkLabs/usb-switch/firmware)
+
+This fork has the following changes:
+- Add `AT+ID` command to store the set board ID at the last flash page, which can be checked later by `AT+ID?` or reading USB Descriptor (iProduct String Descriptor 2).
+- Make PortB=1 and PortC=2
+- Fix a bug in SS_Switch
+
 ## Rev-C
 
 Firmware for USB switch can be found under [firmware](/firmware/) folder.
@@ -10,7 +17,7 @@ Testing instruction are also available in the [README](/firmware/README.md)
 
 There is code that is auto generated using STM32CubeMX and can be found under the [generated folder](/firmware/generated). Instructions to work with the generate code can be found [here](/firmware/generated/README.md)
 
-Operational logic for the USB switch can be found under [usb_switch_code](/firmware/usb_switch_code) 
+Operational logic for the USB switch can be found under [usb_switch_code](/firmware/usb_switch_code)
 
 ## Product photos Rev-C
 
