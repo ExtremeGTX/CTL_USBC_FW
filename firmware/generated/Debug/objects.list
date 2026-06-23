@@ -1,4 +1,5 @@
 "./usb_switch_code/at_cmds.o"
+"./usb_switch_code/board_config.o"
 "./usb_switch_code/switch_ctrl.o"
 "./usb_switch_code/usbd_cdc_if_ctrl.o"
 "./Core/Src/gpio.o"

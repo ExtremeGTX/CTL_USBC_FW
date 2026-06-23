@@ -31,6 +31,7 @@
 */
 
 #include "at_cmds.h"
+#include "board_config.h"
 #include "main.h"
 #include "stm32f1xx_hal.h"
 #include "switch_ctrl.h"
@@ -43,14 +44,14 @@ at_cmds_e selected_port = AT_PORTS_DISABLED;
 
 at_cmds_e parse_input(const char *rx_data) {
 
+  const size_t rx_len = strlen(rx_data);
+
   if (!strcmp(rx_data, "AT")) {
     return AT_TEST;
   }
 
   // Does the received string starts with AT?
-  if (strncmp(rx_data, "AT", 2) != 0 ||
-      strlen(rx_data) >
-          11) // If first 2 char != 'AT' or cmd is longer than expected
+  if (strncmp(rx_data, "AT", 2) != 0)
   {
     // return unknown if not
     return AT_UNKNOWN_CMD;
@@ -62,10 +63,14 @@ at_cmds_e parse_input(const char *rx_data) {
     if (rx_data[2] == '+') {
       // is the '+' followed by "GMR"?
       if ((strncmp(&rx_data[3], "GMR", 3) == 0)) {
-        return AT_INFO;
+        return (rx_len == 6U) ? AT_INFO : AT_UNKNOWN_CMD;
       }
       // is the '+' followed by "PORT"?
       else if (strncmp(&rx_data[3], "PORT", 4) == 0) {
+        if (rx_len < 8U) {
+          return AT_PORT_CMD_ERROR;
+        }
+
         // is "PORT" followed by '='?
         if (rx_data[7] == '=' && strlen(rx_data) > 8) {
           char *mode_char = NULL;
@@ -97,7 +102,23 @@ at_cmds_e parse_input(const char *rx_data) {
             }
           }
         } else if (rx_data[7] == '?') {
-          return AT_PORT_SEL;
+          return (rx_len == 8U) ? AT_PORT_SEL : AT_PORT_CMD_ERROR;
+        }
+
+        return AT_PORT_CMD_ERROR;
+      }
+      else if (strncmp(&rx_data[3], "ID", 2) == 0) {
+        if (rx_len < 6U) {
+          return AT_BOARD_ID_CMD_ERROR;
+        }
+
+        if ((rx_data[5] == '?') && (rx_len == 6U)) {
+          return AT_BOARD_ID_QUERY;
+        } else if (rx_data[5] == '=') {
+          return BoardConfig_IsValidBoardId(&rx_data[6]) ? AT_BOARD_ID_SET
+                                                        : AT_BOARD_ID_CMD_ERROR;
+        } else {
+          return AT_BOARD_ID_CMD_ERROR;
         }
       }
       // if not followed by "PORT" its unknown
@@ -123,8 +144,8 @@ void process_input(const char *input) {
     break;
 
   case AT_INFO:
-    printf("Codethink USB C switch\n\rHW:%s\r\nFW:V%s\r\n", HARDWARE_VERSION,
-           FIRMWARE_VERSION);
+    printf("Codethink USB C switch\n\rHW:%s\r\nFW:V%s\r\nID:%s\r\n",
+           HARDWARE_VERSION, FIRMWARE_VERSION, BoardConfig_GetBoardId());
     break;
 
   case AT_PORTS_DISABLED:
@@ -197,6 +218,22 @@ void process_input(const char *input) {
 
   case AT_PORT_NUMBERS_QUERY:
     printf("\r2\r\nOK\r\n");
+    break;
+
+  case AT_BOARD_ID_SET:
+    if (BoardConfig_SetBoardId(&input[6])) {
+      printf("\rOK\r\n");
+    } else {
+      printf("\rERROR: ID WRITE FAILED\r\n");
+    }
+    break;
+
+  case AT_BOARD_ID_QUERY:
+    printf("\r%s\r\nOK\r\n", BoardConfig_GetBoardId());
+    break;
+
+  case AT_BOARD_ID_CMD_ERROR:
+    printf("\rERROR: ID MUST BE 1-32 CHARS [A-Z,a-z,0-9,_,-]\r\n");
     break;
 
   case AT_PORT_CMD_ERROR:
