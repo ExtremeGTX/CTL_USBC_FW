@@ -118,8 +118,8 @@ source_sink_t port_c = {
 
 /**
  * @brief Set respective LEDs based on selected mode
- * 
- * @param led_states_e led_state: Leds to turn on near 
+ *
+ * @param led_states_e led_state: Leds to turn on near
  * respective ports
  */
 
@@ -201,11 +201,11 @@ static void hs_switch_control(port_ctrl_e mode) {
     break;
 
   case PORTS_DISABLED:
-    HAL_GPIO_WritePin(switch_c.en_port, switch_c.en_pin, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(switch_c.en_port, switch_c.en_pin, GPIO_PIN_SET);
     HAL_GPIO_WritePin(switch_c.ctrl_port, switch_c.ctrl_pin, GPIO_PIN_RESET);
-    HAL_GPIO_WritePin(switch_d.en_port, switch_d.en_pin, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(switch_d.en_port, switch_d.en_pin, GPIO_PIN_SET);
     HAL_GPIO_WritePin(switch_d.ctrl_port, switch_d.ctrl_pin, GPIO_PIN_RESET);
-    HAL_GPIO_WritePin(switch_sbu.en_port, switch_sbu.en_pin, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(switch_sbu.en_port, switch_sbu.en_pin, GPIO_PIN_SET);
     HAL_GPIO_WritePin(switch_sbu.ctrl_port, switch_sbu.ctrl_pin,
                       GPIO_PIN_RESET);
     break;
@@ -230,21 +230,21 @@ static void ss_switch_control(port_ctrl_e mode)
   case PORT_C_EN:
     HAL_GPIO_WritePin(ss1.en_port, ss1.en_pin, GPIO_PIN_RESET);
     HAL_GPIO_WritePin(ss1.ctrl_port, ss1.ctrl_pin, GPIO_PIN_SET);
-    HAL_GPIO_WritePin(ss2.en_port, ss2.ctrl_pin, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(ss2.en_port, ss2.en_pin, GPIO_PIN_RESET);
     HAL_GPIO_WritePin(ss2.ctrl_port, ss2.ctrl_pin, GPIO_PIN_SET);
     break;
 
   case PORT_B_EN:
     HAL_GPIO_WritePin(ss1.en_port, ss1.en_pin, GPIO_PIN_RESET);
     HAL_GPIO_WritePin(ss1.ctrl_port, ss1.ctrl_pin, GPIO_PIN_RESET);
-    HAL_GPIO_WritePin(ss2.en_port, ss2.ctrl_pin, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(ss2.en_port, ss2.en_pin, GPIO_PIN_RESET);
     HAL_GPIO_WritePin(ss2.ctrl_port, ss2.ctrl_pin, GPIO_PIN_RESET);
     break;
 
   case PORTS_DISABLED:
     HAL_GPIO_WritePin(ss1.en_port, ss1.en_pin, GPIO_PIN_SET);
     HAL_GPIO_WritePin(ss1.ctrl_port, ss1.ctrl_pin, GPIO_PIN_RESET);
-    HAL_GPIO_WritePin(ss2.en_port, ss2.ctrl_pin, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(ss2.en_port, ss2.en_pin, GPIO_PIN_SET);
     HAL_GPIO_WritePin(ss2.ctrl_port, ss2.ctrl_pin, GPIO_PIN_RESET);
     break;
 
@@ -366,6 +366,7 @@ void port_switch_enable(port_ctrl_e mode, port_on_power_ctrl_e power_ctrl) {
 
 void port_switch_disable(port_off_power_ctrl_e power_ctrl) {
   hs_switch_control(PORTS_DISABLED);
+  ss_switch_control(PORTS_DISABLED);
 
   switch (power_ctrl) {
   case BOTH_PORT_POWER_ON:
@@ -382,7 +383,7 @@ void port_switch_disable(port_off_power_ctrl_e power_ctrl) {
 
   case PORTS_OFF:
     // disable both
-    led_ctrl(LEDS_OFF);  
+    led_ctrl(LEDS_OFF);
     HAL_GPIO_WritePin(port_b.port_sink_bank, port_b.port_sink_pin,
                       GPIO_PIN_RESET);
     HAL_GPIO_WritePin(port_b.port_source_bank, port_b.port_source_pin,
@@ -397,5 +398,3 @@ void port_switch_disable(port_off_power_ctrl_e power_ctrl) {
     break;
   }
 }
-
-
