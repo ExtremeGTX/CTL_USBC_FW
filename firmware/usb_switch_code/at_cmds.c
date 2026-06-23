@@ -241,8 +241,6 @@ void process_input(const char *input) {
     break;
 
   case AT_UNKNOWN_CMD:
-    port_switch_disable(PORTS_OFF);
-    selected_port = AT_UNKNOWN_CMD;
     printf("\rERROR: UNKNOWN COMMAND\r\n");
     break;
 
