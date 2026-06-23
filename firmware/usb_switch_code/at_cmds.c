@@ -38,7 +38,7 @@
 #include "usbd_desc.h"
 #include <stdint.h>
 
-const char *FIRMWARE_VERSION = "2.0";
+const char *FIRMWARE_VERSION = "2.1-shahawi";
 const char *HARDWARE_VERSION = USBD_PRODUCT_STRING_FS;
 at_cmds_e selected_port = AT_PORTS_DISABLED;
 
