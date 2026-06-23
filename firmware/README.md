@@ -8,18 +8,19 @@ Firmware for the USB Switch written using STM's toolchian
 
 ![Rev c ports diagram](../photos/switch_rev_c_ports.png)
 
-USB switch is configured to be a USB CDC device. Send the following command using a serial terminal to operate the switch. Each command sent should result in corresponding message being printed to the serial terminal. 
+USB switch is configured to be a USB CDC device. Send the following command using a serial terminal to operate the switch. Each command sent should result in corresponding message being printed to the serial terminal.
 
 | Command       | A      | B      | C      | Message             |
 |---------------|--------|--------|--------|---------------------|
 | "AT"          | -      | -      | -      | "OK\n"              |
 | "AT+GMR\n"    | -      | -      | -      | Returns device info |
-| "AT+PORT=1\n" | Bi-dir | 0      | Bi-dir | "OK\n"              |
-| "AT+PORT=2\n" | Bi-dir | Bi-dir | 0      | "OK\n"              |
-| "AT+PORT=3\n" | Sink   | 0      | Source | "OK\n"              |
-| "AT+PORT=4\n" | Sink   | Source | 0      | "OK\n"              |
-| "AT+PORT=5\n" | Source | 0      | Sink   | "OK\n"              |
-| "AT+PORT=6\n" | Source | Sink   | 0      | "OK\n"              |
+| "AT+PORT=0\n" | 0      | 0      | 0      | "OK\n"              |
+| "AT+PORT=1\n" | Bi-dir | Bi-dir | 0      | "OK\n"              |
+| "AT+PORT=2\n" | Bi-dir | 0      | Bi-dir | "OK\n"              |
+| "AT+PORT=3\n" | Sink   | Source | 0      | "OK\n"              |
+| "AT+PORT=4\n" | Sink   | 0      | Source | "OK\n"              |
+| "AT+PORT=5\n" | Source | Sink   | 0      | "OK\n"              |
+| "AT+PORT=6\n" | Source | 0      | Sink   | "OK\n"              |
 | "AT+PORT=7\n" | POWER  | POWER  | POWER  | "OK\n"              |
 | "AT+PORT=?\n" | -      | -      | -      | "\r2\r\nOK\r\n"     |
 | "AT+PORT?\n"  | -      | -      | -      | Returns which ports are active<br/> *Output can be:*<br/><ul><li>"\rA source B sink\r\n"</li><li>"\rA source C sink\r\n"</li><li>"\rB source A sink\r\n"</li><li>"\rC source A sink\r\n"</li><li>"\rBi-Dir A - C\r\n"</li><li>"\rBi-Dir A - B\r\n"</li><li>"\rAll ports power on\r\n"</li></ul>|
@@ -28,11 +29,21 @@ USB switch is configured to be a USB CDC device. Send the following command usin
 
 When a board ID is stored, the USB product string becomes `USB switch rev-C <id>` on the next USB enumeration.
 
-## Testing instructions 
+### Switch modes
+
+Port A is the common port. The switch can connect A to either B or C for USB data, and it can also control the USB-C power role signals for the selected port.
+
+* `Bi-dir` connects the USB data path between A and the selected port and enables both source and sink power-control outputs for that selected port. Use this when the attached devices should negotiate the USB-C power/data role normally.
+* `Source` means that port advertises/provides the source-side role for the selected connection. For example, `AT+PORT=5` sets A as `Source` and B as `Sink`.
+* `Sink` means that port advertises/uses the sink-side role for the selected connection. For example, `AT+PORT=3` sets A as `Sink` and B as `Source`.
+* `POWER` is a power-only mode for all ports. It turns on the power-control outputs for B and C, but leaves the USB data switches disabled, so it is not a USB data connection mode.
+* `0` means the port is disconnected/off in that mode.
+
+## Testing instructions
 
 * Connect the switch to the host computer using a USB-C cable. The switch should get discovered as a USB CDC device.
 * Use a serial terminal (screen, putty etc.) to interact with the device.
-* Send the commands listed in the table above and make sure the respective message is printed to the terminal. 
+* Send the commands listed in the table above and make sure the respective message is printed to the terminal.
 * Try sending the [list of commands](/firmware/test/test_commands.txt) (if on linux use `cat <path>/test/test_commands/txt > /dev/tty<DEV>`) to the device. Make sure the device is still responsive after the test.
 
 ### Using USB-C to USB-C cable
