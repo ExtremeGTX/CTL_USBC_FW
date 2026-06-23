@@ -84,17 +84,17 @@ at_cmds_e parse_input(const char *rx_data) {
             if (mode_num == 0) {
               return AT_PORTS_DISABLED;
             } else if (mode_num == 1) {
-              return AT_PORT_A_C_ON;
-            } else if (mode_num == 2) {
               return AT_PORT_A_B_ON;
+            } else if (mode_num == 2) {
+              return AT_PORT_A_C_ON;
             } else if (mode_num == 3) {
-              return AT_PORT_C_SOURCE_A;
-            } else if (mode_num == 4) {
               return AT_PORT_B_SOURCE_A;
+            } else if (mode_num == 4) {
+              return AT_PORT_C_SOURCE_A;
             } else if (mode_num == 5) {
-              return AT_PORT_A_SOURCE_C;
-            } else if (mode_num == 6) {
               return AT_PORT_A_SOURCE_B;
+            } else if (mode_num == 6) {
+              return AT_PORT_A_SOURCE_C;
             } else if (mode_num == 7) {
               return AT_PORT_A_B_C_ON;
             } else {
